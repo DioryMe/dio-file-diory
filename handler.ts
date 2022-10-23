@@ -1,12 +1,12 @@
 import { Diograph } from 'diograph-js'
-import { ListObjectsCommand, S3Client } from '@aws-sdk/client-s3'
+import { GetObjectCommand, ListObjectsCommand, S3Client } from '@aws-sdk/client-s3'
 
 export const hello = async (event: any) => {
   // Retrieve diograph.json from S3
   const client = new S3Client({ region: 'eu-west-1' })
-  const bucketParams = { Bucket: process.env.BUCKET_NAME }
-  const objectList = await client.send(new ListObjectsCommand(bucketParams))
-  console.log(objectList)
+  const objectParams = { Bucket: process.env.BUCKET_NAME, Key: 'diograph.json' }
+  const diographJson = await client.send(new GetObjectCommand(objectParams))
+  console.log(diographJson)
 
   /*
   const diographObject = ''
