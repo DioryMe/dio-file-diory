@@ -1,0 +1,12 @@
+service: dio-file-diory
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: eu-north-1
+  runtime: nodejs16.x
+
+functions:
+  hello:
+    handler: dist/handler.hello

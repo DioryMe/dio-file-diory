@@ -1,0 +1,3 @@
+[submodule "diograph-js"]
+	path = diograph-js
+	url = git@github.com:DioryMe/diograph-js.git
