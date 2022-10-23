@@ -6,9 +6,12 @@
   "author": "Jouni Alanen <jouni@diory.me>",
   "license": "MIT",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.194.0",
     "@diograph/file-generator": "0.0.3",
     "@diograph/local-client": "0.0.2",
-    "diograph-js": "0.0.3"
+    "@types/path-browserify": "^1.0.0",
+    "diograph-js": "0.0.3",
+    "path-browserify": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.2.0",
@@ -19,6 +22,7 @@
     "typescript": "^4.5.5"
   },
   "scripts": {
+    "deploy": "yarn build && serverless deploy",
     "build": "tsc",
     "build-watch": "yarn build --watch",
     "prettier": "prettier --write .",

@@ -2,11 +2,24 @@ service: dio-file-diory
 
 frameworkVersion: '3'
 
+custom:
+  s3:
+    bucket: diory-camera-upload
+
 provider:
   name: aws
   region: eu-north-1
   runtime: nodejs16.x
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:*
+          Resource: '*'
 
 functions:
   hello:
     handler: dist/handler.hello
+    environment:
+      BUCKET_NAME: ${self:custom.s3.bucket}
