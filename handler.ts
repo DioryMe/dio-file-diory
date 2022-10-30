@@ -20,9 +20,9 @@ const executeSystemCall = (systemCall: string) => {
   })
 }
 
-const readDiographFromS3 = async () => {
+const readDiographFromS3 = async (bucket: string) => {
   const client = new S3Client({ region: 'eu-west-1' })
-  const objectParams = { Bucket: process.env.BUCKET_NAME, Key: 'diograph.json' }
+  const objectParams = { Bucket: bucket, Key: 'diograph.json' }
   const diographJson = await client.send(new GetObjectCommand(objectParams))
   const s3BodyString = await diographJson.Body?.transformToString()
   if (!s3BodyString) {
@@ -31,9 +31,9 @@ const readDiographFromS3 = async () => {
   return JSON.parse(s3BodyString)
 }
 
-const readDataobjectFromS3ToFile = async (key: string): Promise<string> => {
+const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
   const client = new S3Client({ region: 'eu-west-1' })
-  const objectParams = { Bucket: process.env.BUCKET_NAME, Key: key }
+  const objectParams = { Bucket: bucket, Key: key }
   const response: any = await client.send(new GetObjectCommand(objectParams))
   if (!response.Body) {
     throw new Error(`No response.Body when retrieving ${key}!`)
@@ -55,8 +55,15 @@ const saveDiographToS3 = async (diograph: Diograph) => {
   return diograph.toObject()
 }
 
-export const hello = async (event: any) => {
-  const key = 'PIXNIO-53799-6177x4118.jpeg'
+export const hello = async (event: any, context: any) => {
+  console.log('Received event:', JSON.stringify(event, null, 2))
+
+  const bucket =
+    event && event.Records.length ? event.Records[0].s3.bucket.name : process.env.BUCKET_NAME
+  const key =
+    event && event.Records.length
+      ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
+      : 'PIXNIO-53799-6177x4118.jpeg'
 
   const client = new LocalClient('/tmp')
   const roomClient = new RoomClient(client)
@@ -64,9 +71,9 @@ export const hello = async (event: any) => {
   roomInFocus.initiateRoom({ connections: [{ address: '/tmp', contentClient: 'local' }] })
 
   const copyContent = true
-  const diographObject = await readDiographFromS3()
+  const diographObject = await readDiographFromS3(bucket)
 
-  const retrievedFilePath = await readDataobjectFromS3ToFile(key)
+  const retrievedFilePath = await readDataobjectFromS3ToFile(bucket, key)
   // const retrievedFilePath = '/tmp/PIXNIO-53799-6177x4118.jpeg'
 
   const generator = new Generator()
