@@ -15,9 +15,7 @@ const initRoom = async () => {
   const roomClient = new RoomClient(client)
   const roomInFocus = new Room(roomClient)
   // await roomInFocus.loadRoom()
-  roomInFocus.initiateRoom({
-    connections: [{ address: 'diory-camera-upload', contentClient: 's3-client' }],
-  })
+  roomInFocus.initiateRoom()
   return roomInFocus
 }
 
