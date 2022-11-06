@@ -4,18 +4,7 @@ import { createWriteStream, mkdirSync, existsSync } from 'fs'
 import { readFile } from 'fs/promises'
 import { Generator, getDefaultImage } from '@diograph/file-generator'
 import { dirname } from 'path' // 'path-browserify'
-import { initRoom } from './initRoom'
-
-const readDiographFromS3 = async (bucket: string) => {
-  const client = new S3Client({ region: 'eu-west-1' })
-  const objectParams = { Bucket: bucket, Key: 'diograph.json' }
-  const diographJson = await client.send(new GetObjectCommand(objectParams))
-  const s3BodyString = await diographJson.Body?.transformToString()
-  if (!s3BodyString) {
-    return
-  }
-  return JSON.parse(s3BodyString)
-}
+import { initRoom, loadRoom } from './initRoom'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
   const client = new S3Client({ region: 'eu-west-1' })
@@ -52,12 +41,10 @@ export const hello = async (event: any, context: any) => {
       ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
       : 'PIXNIO-53799-6177x4118.jpeg'
 
-  const roomInFocus = await initRoom()
+  // const roomInFocus = await initRoom()
+  const roomInFocus = await loadRoom()
 
-  const copyContent = true
-
-  // TODO: Initiate room & diograph from existing files from S3
-  // const diographObject = await readDiographFromS3(bucket)
+  const copyContent = false
 
   const retrievedFilePath = await readDataobjectFromS3ToFile(bucket, key)
 
@@ -82,9 +69,9 @@ export const hello = async (event: any, context: any) => {
   // Create new / update
   // const diograph: any = new Diograph()
   // diograph.mergeDiograph(diographObject.diograph)
-  const newDiory = roomInFocus.diograph.createDiory({ text: `New Diory: ${Date.now()}` })
-  const newDiory2 = roomInFocus.diograph.createDiory({ text: `New Diory2: ${Date.now()}` })
-  roomInFocus.diograph.update(newDiory.id, { text: `New name: ${Date.now()}` })
+  // const newDiory = roomInFocus.diograph.createDiory({ text: `New Diory: ${Date.now()}` })
+  // const newDiory2 = roomInFocus.diograph.createDiory({ text: `New Diory2: ${Date.now()}` })
+  // roomInFocus.diograph.update(newDiory.id, { text: `New name: ${Date.now()}` })
 
   await roomInFocus.saveRoom()
 

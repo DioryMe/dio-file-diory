@@ -1,5 +1,13 @@
 # Dio-file-diory
 
+## Deploy
+
+Run `yarn deploy` with available AWS access keys & secret, e.g.:
+
+```
+aws-vault exec jvalanen -- yarn deploy
+```
+
 ## Troubleshooting
 
 Issue:
