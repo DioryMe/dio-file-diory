@@ -9,6 +9,7 @@
     "@aws-sdk/client-s3": "^3.209.0",
     "@diograph/file-generator": "0.0.4-rc1",
     "@diograph/local-client": "0.0.3-rc1",
+    "@diograph/s3-client": "0.0.1-rc1",
     "@types/path-browserify": "^1.0.0",
     "diograph-js": "0.0.4-rc1",
     "path-browserify": "^1.0.1"

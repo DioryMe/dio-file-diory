@@ -1265,6 +1265,11 @@
   resolved "https://registry.yarnpkg.com/@diograph/local-client/-/local-client-0.0.3-rc1.tgz#39eaaf49c0f3c7a448eda2e147a991d30874671e"
   integrity sha512-kMKY12Pw4QbQB04jDXOwHjrNrAiQREQ9E8rehiPXXRllYlBXMQYgIb9DSe2kE7yQl+0AXh+P51hkDHhqEO9rTQ==
 
+"@diograph/s3-client@0.0.1-rc1":
+  version "0.0.1-rc1"
+  resolved "https://registry.yarnpkg.com/@diograph/s3-client/-/s3-client-0.0.1-rc1.tgz#dd39d3a04a352026caa10d25b261999809cac4cb"
+  integrity sha512-FVEQ5wvdQfUgP1n50X/FfKWhivUB0pQIT5ZsTDPI+NULtjc+vBajUYu/VgOAgUTRYeyqpq/zpHEiuQE87hkGAA==
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
