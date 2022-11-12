@@ -4,7 +4,7 @@ import { createWriteStream, mkdirSync, existsSync } from 'fs'
 import { readFile } from 'fs/promises'
 import { Generator, getDefaultImage } from '@diograph/file-generator'
 import { dirname } from 'path' // 'path-browserify'
-import { initRoom, loadRoom } from './initRoom'
+import { initRoom, loadRoom, generateAndAddDioryFromFilePath } from './utils'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
   const client = new S3Client({ region: 'eu-west-1' })
@@ -41,30 +41,14 @@ export const hello = async (event: any, context: any) => {
       ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
       : 'PIXNIO-53799-6177x4118.jpeg'
 
-  // const roomInFocus = await initRoom()
-  const roomInFocus = await loadRoom()
+  // const roomInFocus = await initRoom('diory-camera-upload')
+  const roomInFocus = await loadRoom('diory-camera-upload')
 
   const copyContent = false
 
   const retrievedFilePath = await readDataobjectFromS3ToFile(bucket, key)
 
-  const generator = new Generator()
-  const { dioryObject, thumbnailBuffer, cid } = await generator.generateDioryFromFile(
-    retrievedFilePath,
-  )
-  console.log(JSON.stringify(dioryObject))
-  console.log('cid', cid)
-  const dataUrl = thumbnailBuffer
-    ? `data:image/jpeg;base64,${thumbnailBuffer.toString('base64')}`
-    : getDefaultImage()
-  dioryObject.image = dataUrl
-  const diory = new Diory(dioryObject)
-  if (copyContent) {
-    const sourceFileContent = await readFile(retrievedFilePath)
-    await roomInFocus.addContent(sourceFileContent, cid || dioryObject.id)
-    diory.changeContentUrl(cid || dioryObject.id)
-  }
-  await roomInFocus.diograph.addDiory(diory)
+  const diory = generateAndAddDioryFromFilePath(retrievedFilePath, roomInFocus, copyContent)
 
   // Create new / update
   // const diograph: any = new Diograph()
@@ -74,8 +58,6 @@ export const hello = async (event: any, context: any) => {
   // roomInFocus.diograph.update(newDiory.id, { text: `New name: ${Date.now()}` })
 
   await roomInFocus.saveRoom()
-
-  // TODO: Save diograph.json & room.json to S3
 
   const returnValue = {
     statusCode: 200,
