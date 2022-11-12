@@ -6,14 +6,25 @@ const {
   generateAndAddDioryFromFilePath,
 } = require('./dist/utils')
 
-// initRoom('diory-camera-upload').then((room) => {
-//   generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
-//     room.saveRoom()
-//   })
-// })
+const type = process.argv[2]
 
-initRoomLocal('/Users/Jouni/TestRoom').then((room) => {
-  generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
-    room.saveRoom()
+if (type == 's3') {
+  initRoom('diory-camera-upload').then((room) => {
+    generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
+      room.saveRoom().then(() => {
+        process.exit(0)
+      })
+    })
   })
-})
+} else if (type == 'local') {
+  initRoomLocal('/Users/Jouni/TestRoom').then((room) => {
+    generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
+      room.saveRoom().then(() => {
+        process.exit(0)
+      })
+    })
+  })
+} else {
+  console.log(`Unknown type: ${type}`)
+  process.exit(0)
+}
