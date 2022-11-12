@@ -1,13 +1,19 @@
-const { initRoom, loadRoom } = require('./dist/initRoom')
+const {
+  initRoom,
+  initRoomLocal,
+  loadRoom,
+  loadRoomLocal,
+  generateAndAddDioryFromFilePath,
+} = require('./dist/utils')
 
-// initRoom().then((room) => {
-//   console.log(room.diograph.toObject())
-//   room.saveRoom()
+// initRoom('diory-camera-upload').then((room) => {
+//   generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
+//     room.saveRoom()
+//   })
 // })
 
-loadRoom().then((room) => {
-  console.log('diograph', room.diograph.toObject())
-  console.log('room', room.toObject())
-  room.diograph.createDiory({ text: `New Diory: ${Date.now()}` })
-  room.saveRoom()
+initRoomLocal('/Users/Jouni/TestRoom').then((room) => {
+  generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
+    room.saveRoom()
+  })
 })

@@ -1,6 +1,7 @@
-import { LocalClient } from '@diograph/local-client'
+// import { LocalClient } from '@diograph/local-client'
 import { Diory, Room, RoomClient } from 'diograph-js'
 import { S3Client } from '@diograph/s3-client'
+import { LocalClient } from '@diograph/local-client'
 import { Generator, getDefaultImage } from '@diograph/file-generator'
 import { readFile } from 'fs/promises'
 
@@ -14,6 +15,22 @@ const loadRoom = async (address: string) => {
 
 const initRoom = async (address: string) => {
   const client = new S3Client(address)
+  const roomClient = new RoomClient(client)
+  const roomInFocus = new Room(roomClient)
+  roomInFocus.initiateRoom()
+  return roomInFocus
+}
+
+const loadRoomLocal = async (address: string) => {
+  const client = new LocalClient(address)
+  const roomClient = new RoomClient(client)
+  const roomInFocus = new Room(roomClient)
+  await roomInFocus.loadRoom()
+  return roomInFocus
+}
+
+const initRoomLocal = async (address: string) => {
+  const client = new LocalClient(address)
   const roomClient = new RoomClient(client)
   const roomInFocus = new Room(roomClient)
   roomInFocus.initiateRoom()
@@ -45,4 +62,4 @@ const generateAndAddDioryFromFilePath = async (
   return diory
 }
 
-export { initRoom, loadRoom, generateAndAddDioryFromFilePath }
+export { initRoom, initRoomLocal, loadRoom, loadRoomLocal, generateAndAddDioryFromFilePath }
