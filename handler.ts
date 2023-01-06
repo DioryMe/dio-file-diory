@@ -4,7 +4,7 @@ import { dirname } from 'path' // 'path-browserify'
 import { generateAndAddDioryFromFilePath, loadOrInitRoomS3 } from './utils'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
-  const client = new S3Client({ region: 'eu-west-1' })
+  const client = new S3Client({ region: process.env.REGION })
   const objectParams = { Bucket: bucket, Key: key }
   const response: any = await client.send(new GetObjectCommand(objectParams))
   if (!response.Body) {

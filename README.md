@@ -29,6 +29,6 @@ Fix:
 
 ```
 npm install --platform=linux --arch=x64
-# OR
-npm_config_target_platform=linux npm_config_target_arch=x64 yarn install
 ```
+
+(NOTE: Couldn't get it work with yarn's `npm_config_target_platform=linux npm_config_target_arch=x64 yarn install` ...)

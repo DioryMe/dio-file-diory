@@ -3,12 +3,14 @@ service: dio-file-diory
 frameworkVersion: '3'
 
 custom:
+  # TODO: Remove hardcoded eu-west-1 from S3Client lib to allow changing this
+  region: eu-west-1
   s3:
-    bucket: ${env:BUCKET_NAME}
+    bucketName: ${env:BUCKET_NAME}
 
 provider:
   name: aws
-  region: eu-north-1
+  region: ${self:custom.region}
   runtime: nodejs16.x
   iam:
     role:
@@ -16,17 +18,18 @@ provider:
         - Effect: Allow
           Action:
             - s3:*
-          Resource: '*'
+          Resource: '*' # arn:aws:s3:::${env:BUCKET_NAME}
 
 functions:
   generateDiory:
     handler: dist/handler.generateDiory
     environment:
-      BUCKET_NAME: ${self:custom.s3.bucket}
+      BUCKET_NAME: ${self:custom.s3.bucketName}
+      REGION: ${self:custom.region}
     events:
       - s3:
-          bucket: ${self:custom.s3.bucket}
-          existing: true
+          bucket: ${self:custom.s3.bucketName}
+          # existing: true
           event: s3:ObjectCreated:*
           rules:
             - prefix: UploadTemp
