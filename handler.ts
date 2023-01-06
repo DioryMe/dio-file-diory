@@ -44,7 +44,7 @@ export const generateDiory = async (event: any, context: any) => {
 
   const retrievedFilePath = await readDataobjectFromS3ToFile(bucketName, key)
 
-  const diory = generateAndAddDioryFromFilePath(retrievedFilePath, roomInFocus, copyContent)
+  const diory = await generateAndAddDioryFromFilePath(retrievedFilePath, roomInFocus, copyContent)
 
   // Create new / update
   // const diograph: any = new Diograph()
@@ -57,6 +57,7 @@ export const generateDiory = async (event: any, context: any) => {
 
   const returnValue = {
     statusCode: 200,
+    diory: diory.toObject(),
     diograph: roomInFocus.diograph.toObject(),
     room: roomInFocus.toObject(),
   }
