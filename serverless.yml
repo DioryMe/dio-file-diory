@@ -4,11 +4,11 @@ frameworkVersion: '3'
 
 custom:
   s3:
-    bucket: diory-camera-upload
+    bucket: ${env:BUCKET_NAME}
 
 provider:
   name: aws
-  region: eu-west-1
+  region: eu-north-1
   runtime: nodejs16.x
   iam:
     role:
@@ -19,7 +19,14 @@ provider:
           Resource: '*'
 
 functions:
-  hello:
-    handler: dist/handler.hello
+  generateDiory:
+    handler: dist/handler.generateDiory
     environment:
       BUCKET_NAME: ${self:custom.s3.bucket}
+    events:
+      - s3:
+          bucket: ${self:custom.s3.bucket}
+          existing: true
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: UploadTemp

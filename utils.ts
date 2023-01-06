@@ -4,36 +4,29 @@ import { LocalClient } from '@diograph/local-client'
 import { Generator, getDefaultImage } from '@diograph/file-generator'
 import { readFile } from 'fs/promises'
 
-const loadRoom = async (address: string) => {
-  const client = new S3Client(address)
+const loadOrInitRoom = async (client: any) => {
   const roomClient = new RoomClient(client)
   const roomInFocus = new Room(roomClient)
-  await roomInFocus.loadRoom()
+  try {
+    await roomInFocus.loadRoom()
+  } catch (e: any) {
+    console.log('[loadOrInitRoom]', 'Loading room failed, trying to initiate it', e.message)
+    roomInFocus.initiateRoom()
+    await roomInFocus.saveRoom()
+    console.log('[loadOrInitRoom]', 'Room initiated & saved, loading it now')
+    await roomInFocus.loadRoom()
+  }
   return roomInFocus
 }
 
-const initRoom = async (address: string) => {
-  const client = new S3Client(address)
-  const roomClient = new RoomClient(client)
-  const roomInFocus = new Room(roomClient)
-  roomInFocus.initiateRoom()
-  return roomInFocus
+const loadOrInitRoomS3 = async (address: string) => {
+  const s3Client = new S3Client(address)
+  return loadOrInitRoom(s3Client)
 }
 
-const loadRoomLocal = async (address: string) => {
-  const client = new LocalClient(address)
-  const roomClient = new RoomClient(client)
-  const roomInFocus = new Room(roomClient)
-  await roomInFocus.loadRoom()
-  return roomInFocus
-}
-
-const initRoomLocal = async (address: string) => {
-  const client = new LocalClient(address)
-  const roomClient = new RoomClient(client)
-  const roomInFocus = new Room(roomClient)
-  roomInFocus.initiateRoom()
-  return roomInFocus
+const loadOrInitRoomLocal = async (address: string) => {
+  const localClient = new LocalClient(address)
+  return loadOrInitRoom(localClient)
 }
 
 const generateAndAddDioryFromFilePath = async (
@@ -61,4 +54,4 @@ const generateAndAddDioryFromFilePath = async (
   return diory
 }
 
-export { initRoom, initRoomLocal, loadRoom, loadRoomLocal, generateAndAddDioryFromFilePath }
+export { loadOrInitRoomS3, loadOrInitRoomLocal, generateAndAddDioryFromFilePath }

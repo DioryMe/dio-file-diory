@@ -1,15 +1,13 @@
 const {
-  initRoom,
-  initRoomLocal,
-  loadRoom,
-  loadRoomLocal,
   generateAndAddDioryFromFilePath,
+  loadOrInitRoomS3,
+  loadOrInitRoomLocal,
 } = require('./dist/utils')
 
 const type = process.argv[2]
 
 if (type == 's3') {
-  initRoom('diory-camera-upload').then((room) => {
+  loadOrInitRoomS3('diory-camera-upload').then((room) => {
     generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
       room.saveRoom().then(() => {
         process.exit(0)
@@ -17,7 +15,7 @@ if (type == 's3') {
     })
   })
 } else if (type == 'local') {
-  initRoomLocal('/Users/Jouni/TestRoom').then((room) => {
+  loadOrInitRoomLocal('/Users/Jouni/TestRoom').then((room) => {
     generateAndAddDioryFromFilePath('/Users/Jouni/MyPictures/my-pic.jpg', room, true).then(() => {
       room.saveRoom().then(() => {
         process.exit(0)

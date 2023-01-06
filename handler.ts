@@ -1,7 +1,7 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { createWriteStream, mkdirSync, existsSync } from 'fs'
 import { dirname } from 'path' // 'path-browserify'
-import { initRoom, loadRoom, generateAndAddDioryFromFilePath } from './utils'
+import { generateAndAddDioryFromFilePath, loadOrInitRoomS3 } from './utils'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
   const client = new S3Client({ region: 'eu-west-1' })
@@ -28,22 +28,21 @@ const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<
   })
 }
 
-export const hello = async (event: any, context: any) => {
+export const generateDiory = async (event: any, context: any) => {
   // console.log('Received event:', JSON.stringify(event, null, 2))
 
-  const bucket =
+  const bucketName =
     event && event.Records.length ? event.Records[0].s3.bucket.name : process.env.BUCKET_NAME
   const key =
     event && event.Records.length
       ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
       : 'PIXNIO-53799-6177x4118.jpeg'
 
-  // const roomInFocus = await initRoom('diory-camera-upload')
-  const roomInFocus = await loadRoom('diory-camera-upload')
+  const roomInFocus = await loadOrInitRoomS3(bucketName)
 
-  const copyContent = false
+  const copyContent = true
 
-  const retrievedFilePath = await readDataobjectFromS3ToFile(bucket, key)
+  const retrievedFilePath = await readDataobjectFromS3ToFile(bucketName, key)
 
   const diory = generateAndAddDioryFromFilePath(retrievedFilePath, roomInFocus, copyContent)
 
