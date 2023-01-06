@@ -26,5 +26,5 @@ if (type == 's3') {
   })
 } else {
   console.log(`Unknown type: ${type}`)
-  process.exit(0)
+  process.exit(1)
 }

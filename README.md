@@ -28,11 +28,7 @@ Issue:
 Fix:
 
 ```
-
 npm install --platform=linux --arch=x64
-
-```
-
-```
-
+# OR
+npm_config_target_platform=linux npm_config_target_arch=x64 yarn install
 ```

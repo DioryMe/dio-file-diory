@@ -23,12 +23,11 @@
     "typescript": "^4.8.4"
   },
   "scripts": {
-    "deploy": "yarn build && serverless deploy",
+    "deploy": "echo 'NOTE: Did you run? `npm install --platform=linux --arch=x64`' && yarn build && serverless deploy",
     "build": "tsc",
     "build-watch": "yarn build --watch",
     "prettier": "prettier --write .",
-    "test": "jest .",
-    "test-watch": "yarn test --watch"
+    "test": "node test.js local"
   },
   "prettier": {
     "tabWidth": 2,

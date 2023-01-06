@@ -1,8 +1,5 @@
-import { Diograph, Diory } from 'diograph-js'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { createWriteStream, mkdirSync, existsSync } from 'fs'
-import { readFile } from 'fs/promises'
-import { Generator, getDefaultImage } from '@diograph/file-generator'
 import { dirname } from 'path' // 'path-browserify'
 import { initRoom, loadRoom, generateAndAddDioryFromFilePath } from './utils'
 

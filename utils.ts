@@ -1,4 +1,3 @@
-// import { LocalClient } from '@diograph/local-client'
 import { Diory, Room, RoomClient } from 'diograph-js'
 import { S3Client } from '@diograph/s3-client'
 import { LocalClient } from '@diograph/local-client'
