@@ -1,6 +1,6 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { createWriteStream, mkdirSync, existsSync } from 'fs'
-import { dirname } from 'path' // 'path-browserify'
+import { dirname, join } from 'path' // 'path-browserify'
 import { generateAndAddDioryFromFilePath, loadOrInitRoomS3 } from './utils'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
@@ -30,6 +30,9 @@ const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<
 
 export const generateDiory = async (event: any, context: any) => {
   // console.log('Received event:', JSON.stringify(event, null, 2))
+
+  const ffmpegDir = dirname(require.resolve('ffmpeg-static'))
+  process.env.FFMPEG_PATH = join(ffmpegDir, 'ffmpeg')
 
   const bucketName =
     event && event.Records.length ? event.Records[0].s3.bucket.name : process.env.BUCKET_NAME
