@@ -12,6 +12,8 @@ provider:
   name: aws
   region: ${self:custom.region}
   runtime: nodejs16.x
+  timeout: 30
+  memorySize: 512
   iam:
     role:
       statements:
