@@ -957,13 +957,13 @@
   dependencies:
     "@diograph/diograph" "^0.2.0-rc4"
 
-"@diograph/s3-client@next":
-  version "0.2.0-rc1"
-  resolved "https://registry.yarnpkg.com/@diograph/s3-client/-/s3-client-0.2.0-rc1.tgz#79a5c4cbaeaba2cac11760e9206d0865c0891b95"
-  integrity sha512-dW+YEITPvBgymxnngEGlB3K5RvClnEnAn/8266/joAs9d88/wXySmCFhKHyL/0cuzv35kvab1PuDLvd6hmSKkw==
+"@diograph/s3-client@^0.2.0-rc2":
+  version "0.2.0-rc2"
+  resolved "https://registry.yarnpkg.com/@diograph/s3-client/-/s3-client-0.2.0-rc2.tgz#849caa24b34335dbda847d4285d5fe492e40eec6"
+  integrity sha512-3BJu15RPe1q5Ikbe5xzjqXQErOYDAyk3RaDJaRfHo+P8DR70k750nl3rmB9UZ8vbxLP65g4eseRYJdDW5GY0Ww==
   dependencies:
     "@aws-sdk/client-s3" "^3.209.0"
-    "@diograph/diograph" "^0.2.0-rc4"
+    "@diograph/diograph" "^0.2.2-rc2"
 
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
@@ -2223,9 +2223,9 @@ diff-sequences@^29.6.3:
   integrity sha512-EjePK1srD3P08o2j4f0ExnylqRs5B9tJjcp9t1krH2qRi8CCdsYfwe9JgSLurFBWwq4uOlipzfk5fHNvwFKr8Q==
 
 electron-to-chromium@^1.4.668:
-  version "1.4.689"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.689.tgz#94fe370b800d978b606a2b4c0c5db5c8c98db4f2"
-  integrity sha512-GatzRKnGPS1go29ep25reM94xxd1Wj8ritU0yRhCJ/tr1Bg8gKnm6R9O/yPOhGQBoLMZ9ezfrpghNaTw97C/PQ==
+  version "1.4.690"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.690.tgz#dd5145d45c49c08a9a6f7454127e660bdf9a3fa7"
+  integrity sha512-+2OAGjUx68xElQhydpcbqH50hE8Vs2K6TkAeLhICYfndb67CVH0UsZaijmRUE3rHlIxU1u0jxwhgVe6fK3YANA==
 
 emittery@^0.13.1:
   version "0.13.1"
