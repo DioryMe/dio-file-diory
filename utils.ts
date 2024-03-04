@@ -1,58 +1,31 @@
-import { ConnectionClient, Diory, Room, RoomClient } from '@diograph/diograph'
+import { Room } from '@diograph/diograph'
 import { S3Client } from '@diograph/s3-client'
-import { LocalClient } from '@diograph/local-client'
 import { generateDiory } from '@diograph/file-generator'
 import { readFile } from 'fs/promises'
+import { constructAndLoadRoom } from '@diograph/utils'
+import { IDiory } from '@diograph/diograph/types'
+import { LocalClient } from '@diograph/local-client'
 
-export const loadOrInitRoom = async (address: string, clientType: string) => {
-  const room = await constructAndLoadRoom(address, clientType)
-  return room
-}
-
-const constructRoom = async (address: string, roomClientType: string): Promise<Room> => {
-  const client = await getClientAndVerify(roomClientType, address)
-  const roomClient = new RoomClient(client)
-  return new Room(roomClient)
-}
-
-const constructAndLoadRoom = async (address: string, roomClientType: string): Promise<Room> => {
-  const room = await constructRoom(address, roomClientType)
-  await room.loadRoom({
-    LocalClient: {
-      clientConstructor: LocalClient,
+export const loadOrInitRoom = async (address: string, clientType: string): Promise<Room> => {
+  const credentials = {
+    region: 'eu-west-1',
+    credentials: {
+      accessKeyId: '',
+      secretAccessKey: '',
     },
-    // S3Client: {
-    //   clientConstructor: S3Client,
-    //   credentials: { region: 'eu-west-1', credentials },
-    // },
+  }
+  const room = await constructAndLoadRoom(address, clientType, {
+    LocalClient: { clientConstructor: LocalClient },
+    S3Client: { clientConstructor: S3Client, credentials },
   })
   return room
-}
-
-export const getClientAndVerify = async (
-  clientType: string,
-  address: string,
-): Promise<ConnectionClient> => {
-  console.log(`Verifying address for ${clientType}:`, address)
-  let client: ConnectionClient
-  if (clientType == 'LocalClient') {
-    client = new LocalClient(address)
-    await client.verify()
-  } else if (clientType == 'S3Client') {
-    client = new S3Client(address)
-    await client.verify()
-  } else {
-    throw new Error(`getClientAndVerify: Unknown clientType: ${clientType}`)
-  }
-
-  return client
 }
 
 export const generateAndAddDioryFromFilePath = async (
   filePath: string,
   room: Room,
   copyContent: boolean,
-) => {
+): Promise<IDiory> => {
   let diory
   try {
     diory = await generateDiory('', filePath)

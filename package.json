@@ -7,10 +7,12 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.209.0",
-    "@diograph/diograph": "0.2.2-rc2",
-    "@diograph/file-generator": "^0.1.2-rc4",
+    "@aws-sdk/credential-providers": "^3.525.0",
+    "@diograph/diograph": "next",
+    "@diograph/file-generator": "next",
     "@diograph/local-client": "next",
-    "@diograph/s3-client": "^0.2.0-rc2",
+    "@diograph/s3-client": "next",
+    "@diograph/utils": "next",
     "@types/path-browserify": "^1.0.0",
     "ffmpeg-static": "^5.1.0",
     "path-browserify": "^1.0.1"
