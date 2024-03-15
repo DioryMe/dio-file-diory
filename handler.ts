@@ -41,7 +41,7 @@ export const generateDiory = async (event: any, context: any) => {
       ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
       : 'PIXNIO-53799-6177x4118.jpeg'
 
-  const roomInFocus = await loadOrInitRoom(bucketName, 'S3Client')
+  const roomInFocus = await loadOrInitRoom(`s3://${bucketName}/room`, 'S3Client')
 
   const copyContent = true
 

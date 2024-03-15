@@ -10,8 +10,8 @@ export const loadOrInitRoom = async (address: string, clientType: string): Promi
   const credentials = {
     region: 'eu-west-1',
     credentials: {
-      accessKeyId: '',
-      secretAccessKey: '',
+      accessKeyId: process.env.BUCKET_ACCESS_KEY || process.env.AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.BUCKET_SECRET_KEY || process.env.AWS_SECRET_ACCESS_KEY || '',
     },
   }
   const room = await constructAndLoadRoom(address, clientType, {
@@ -38,7 +38,6 @@ export const generateAndAddDioryFromFilePath = async (
     console.log(error.message)
     throw error
   }
-
   room.diograph.addDiory(diory)
 
   if (copyContent) {
@@ -48,6 +47,5 @@ export const generateAndAddDioryFromFilePath = async (
   }
 
   await room.saveRoom()
-
   return diory
 }

@@ -7,6 +7,8 @@ custom:
   region: eu-west-1
   s3:
     bucketName: ${env:BUCKET_NAME}
+    accessKey: ${env:BUCKET_ACCESS_KEY}
+    secretKey: ${env:BUCKET_SECRET_KEY}
 
 provider:
   name: aws
@@ -27,8 +29,11 @@ provider:
 functions:
   generateDiory:
     handler: dist/handler.generateDiory
+    reservedConcurrency: 1
     environment:
       BUCKET_NAME: ${self:custom.s3.bucketName}
+      BUCKET_ACCESS_KEY: ${self:custom.s3.accessKey}
+      BUCKET_SECRET_KEY: ${self:custom.s3.secretKey}
       REGION: ${self:custom.region}
     events:
       - s3:
