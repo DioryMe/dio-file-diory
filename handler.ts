@@ -1,7 +1,7 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { createWriteStream, mkdirSync, existsSync } from 'fs'
 import { dirname, join } from 'path' // 'path-browserify'
-import { generateAndAddDioryFromFilePath, loadOrInitRoomS3 } from './utils'
+import { generateAndAddDioryFromFilePath, loadOrInitRoom } from './utils'
 
 const readDataobjectFromS3ToFile = async (bucket: string, key: string): Promise<string> => {
   const client = new S3Client({ region: process.env.REGION })
@@ -41,7 +41,7 @@ export const generateDiory = async (event: any, context: any) => {
       ? decodeURIComponent(event.Records[0].s3.object.key.replace(/\+/g, ' '))
       : 'PIXNIO-53799-6177x4118.jpeg'
 
-  const roomInFocus = await loadOrInitRoomS3(bucketName)
+  const roomInFocus = await loadOrInitRoom(`s3://${bucketName}/room`, 'S3Client')
 
   const copyContent = true
 
@@ -51,7 +51,7 @@ export const generateDiory = async (event: any, context: any) => {
 
   // Create new / update
   // const diograph: any = new Diograph()
-  // diograph.mergeDiograph(diographObject.diograph)
+  // diograph.addDiograph(diographObject.diograph)
   // const newDiory = roomInFocus.diograph.createDiory({ text: `New Diory: ${Date.now()}` })
   // const newDiory2 = roomInFocus.diograph.createDiory({ text: `New Diory2: ${Date.now()}` })
   // roomInFocus.diograph.update(newDiory.id, { text: `New name: ${Date.now()}` })

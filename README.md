@@ -5,14 +5,14 @@
 Run `yarn deploy` with available AWS access keys & secret, e.g.:
 
 ```
-aws-vault exec jvalanen -- yarn deploy
+aws-vault exec ****** -- yarn deploy
 ```
 
 ## Test
 
 ```
 node test.js local
-aws-vault exec jvalanen -- node test.js s3
+aws-vault exec ****** -- node test.js s3
 ```
 
 ## Troubleshooting

@@ -1,57 +1,51 @@
-import { Diory, Room, RoomClient } from 'diograph-js'
+import { Room } from '@diograph/diograph'
 import { S3Client } from '@diograph/s3-client'
-import { LocalClient } from '@diograph/local-client'
-import { Generator, getDefaultImage } from '@diograph/file-generator'
+import { generateDiory } from '@diograph/file-generator'
 import { readFile } from 'fs/promises'
+import { constructAndLoadRoom } from '@diograph/utils'
+import { IDiory } from '@diograph/diograph/types'
+import { LocalClient } from '@diograph/local-client'
 
-const loadOrInitRoom = async (client: any) => {
-  const roomClient = new RoomClient(client)
-  const roomInFocus = new Room(roomClient)
-  try {
-    await roomInFocus.loadRoom()
-  } catch (e: any) {
-    console.log('[loadOrInitRoom]', 'Loading room failed, trying to initiate it', e.message)
-    roomInFocus.initiateRoom()
-    await roomInFocus.saveRoom()
-    console.log('[loadOrInitRoom]', 'Room initiated & saved, loading it now')
-    await roomInFocus.loadRoom()
+export const loadOrInitRoom = async (address: string, clientType: string): Promise<Room> => {
+  const credentials = {
+    region: 'eu-west-1',
+    credentials: {
+      accessKeyId: process.env.BUCKET_ACCESS_KEY || process.env.AWS_ACCESS_KEY_ID || '',
+      secretAccessKey: process.env.BUCKET_SECRET_KEY || process.env.AWS_SECRET_ACCESS_KEY || '',
+    },
   }
-  return roomInFocus
+  const room = await constructAndLoadRoom(address, clientType, {
+    LocalClient: { clientConstructor: LocalClient },
+    S3Client: { clientConstructor: S3Client, credentials },
+  })
+  return room
 }
 
-const loadOrInitRoomS3 = async (address: string) => {
-  const s3Client = new S3Client(address)
-  return loadOrInitRoom(s3Client)
-}
-
-const loadOrInitRoomLocal = async (address: string) => {
-  const localClient = new LocalClient(address)
-  return loadOrInitRoom(localClient)
-}
-
-const generateAndAddDioryFromFilePath = async (
+export const generateAndAddDioryFromFilePath = async (
   filePath: string,
   room: Room,
   copyContent: boolean,
-) => {
-  const generator = new Generator()
-  const { dioryObject, thumbnailBuffer, cid } = await generator.generateDioryFromFile(filePath)
-
-  const dataUrl = thumbnailBuffer
-    ? `data:image/jpeg;base64,${thumbnailBuffer.toString('base64')}`
-    : getDefaultImage()
-  dioryObject.image = dataUrl
-  const diory = new Diory(dioryObject)
+): Promise<IDiory> => {
+  let diory
+  try {
+    diory = await generateDiory('', filePath)
+  } catch (error: any) {
+    if (/^FFMPEG_PATH not defined/.test(error.message)) {
+      console.error(
+        `Folder includes a video file which requires FFMPEG for diory generation. \nPlease set FFMPEG_PATH`,
+      )
+    }
+    console.log(error.message)
+    throw error
+  }
+  room.diograph.addDiory(diory)
 
   if (copyContent) {
     const sourceFileContent = await readFile(filePath)
-    await room.addContent(sourceFileContent, cid || dioryObject.id)
-    diory.changeContentUrl(cid || dioryObject.id)
+    await room.addContent(sourceFileContent, diory.id)
+    // diory.changeContentUrl(dioryObject.id)
   }
 
-  await room.diograph.addDiory(diory)
-
+  await room.saveRoom()
   return diory
 }
-
-export { loadOrInitRoomS3, loadOrInitRoomLocal, generateAndAddDioryFromFilePath }

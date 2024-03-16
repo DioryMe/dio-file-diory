@@ -7,21 +7,24 @@
   "license": "MIT",
   "dependencies": {
     "@aws-sdk/client-s3": "^3.209.0",
-    "@diograph/file-generator": "0.0.4-rc2",
-    "@diograph/local-client": "0.0.3-rc1",
-    "@diograph/s3-client": "0.0.1-rc1",
+    "@aws-sdk/credential-providers": "^3.525.0",
+    "@diograph/diograph": "next",
+    "@diograph/file-generator": "next",
+    "@diograph/local-client": "next",
+    "@diograph/s3-client": "next",
+    "@diograph/utils": "next",
     "@types/path-browserify": "^1.0.0",
-    "diograph-js": "0.0.4-rc1",
     "ffmpeg-static": "^5.1.0",
     "path-browserify": "^1.0.1"
   },
   "devDependencies": {
     "@types/jest": "^29.2.2",
-    "@types/uuid": "^8.3.4",
+    "@types/uuid": "^9.0.8",
     "jest": "^29.3.1",
-    "prettier": "^2.5.1",
+    "prettier": "^3.2.5",
+    "serverless": "3.38.0",
     "ts-jest": "^29.0.3",
-    "typescript": "^4.8.4"
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "deploy": "echo 'NOTE: Did you run? `npm install --platform=linux --arch=x64`' && yarn build && serverless deploy",
