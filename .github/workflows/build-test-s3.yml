@@ -12,6 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI: false
+      BUCKET_ACCESS_KEY: ${{ secrets.BUCKET_ACCESS_KEY }}
+      BUCKET_SECRET_KEY: ${{ secrets.BUCKET_SECRET_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,6 +34,8 @@ jobs:
       - run: yarn global add @diograph/dcli
 
       - run: mkdir /tmp/Diory\ Content && touch ~/.dcli
+      - run: dcli config set s3-credentials "$BUCKET_ACCESS_KEY $BUCKET_SECRET_KEY"
+
       - run: export EPOCH=$(date +%s)
       - run: dcli room create --path s3://jvalanen-diory-test3/$EPOCH/ --clientType S3Client
 
