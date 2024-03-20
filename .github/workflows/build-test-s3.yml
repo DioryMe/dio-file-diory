@@ -34,6 +34,7 @@ jobs:
       - run: yarn global add @diograph/dcli
 
       - run: mkdir /tmp/Diory\ Content && touch ~/.dcli
+      - run: dcli room create --path /tmp
       - run: dcli config set s3-credentials "$BUCKET_ACCESS_KEY $BUCKET_SECRET_KEY"
 
       - run: export EPOCH=$(date +%s)
