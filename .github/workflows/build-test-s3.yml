@@ -37,7 +37,6 @@ jobs:
       - run: dcli room create --path /tmp
       - run: dcli config set s3-credentials "$BUCKET_ACCESS_KEY $BUCKET_SECRET_KEY"
 
-      - run: export EPOCH=$(date +%s)
+      - run: echo "EPOCH=$(date +%s)" >> "$GITHUB_ENV"
       - run: dcli room create --path s3://jvalanen-diory-test3/$EPOCH/ --clientType S3Client
-
       - run: node test.js s3 s3://jvalanen-diory-test3/$EPOCH/
