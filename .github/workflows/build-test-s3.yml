@@ -1,9 +1,11 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Local test (node test.js local)
+name: S3 test (node test.js s3)
 
-on: [push]
+on:
+  - push
+  # workflow_call:
 
 jobs:
   build:
@@ -30,6 +32,7 @@ jobs:
       - run: yarn global add @diograph/dcli
 
       - run: mkdir /tmp/Diory\ Content && touch ~/.dcli
-      - run: dcli room create --path /tmp
+      - run: export EPOCH=$(date +%s)
+      - run: dcli room create --path s3://jvalanen-diory-test3/$EPOCH/ --clientType S3Client
 
-      - run: node test.js local
+      - run: node test.js s3 s3://jvalanen-diory-test3/$EPOCH/
