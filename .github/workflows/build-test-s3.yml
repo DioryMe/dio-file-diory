@@ -4,8 +4,7 @@
 name: S3 test (node test.js s3)
 
 on:
-  - push
-  # workflow_call:
+  workflow_call:
 
 jobs:
   build:
@@ -34,6 +33,7 @@ jobs:
       - run: yarn global add @diograph/dcli
 
       - run: mkdir /tmp/Diory\ Content && touch ~/.dcli
+      # TODO: Update dcli and remove this workaround
       - run: dcli room create --path /tmp
       - run: dcli config set s3-credentials "$BUCKET_ACCESS_KEY $BUCKET_SECRET_KEY"
 
