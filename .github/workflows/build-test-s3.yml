@@ -1,0 +1,42 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: S3 test (node test.js s3)
+
+on:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      CI: false
+      BUCKET_ACCESS_KEY: ${{ secrets.BUCKET_ACCESS_KEY }}
+      BUCKET_SECRET_KEY: ${{ secrets.BUCKET_SECRET_KEY }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Checkout demo-content-room
+        uses: actions/checkout@v4
+        with:
+          path: './demo-content-room'
+          repository: 'DioryMe/demo-content-room'
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+
+      - run: yarn
+      - run: yarn build
+      - run: yarn global add @diograph/dcli
+
+      - run: mkdir /tmp/Diory\ Content && touch ~/.dcli
+      # TODO: Update dcli and remove this workaround
+      - run: dcli room create --path /tmp
+      - run: dcli config set s3-credentials "$BUCKET_ACCESS_KEY $BUCKET_SECRET_KEY"
+
+      - run: echo "EPOCH=$(date +%s)" >> "$GITHUB_ENV"
+      - run: dcli room create --path s3://jvalanen-diory-test3/$EPOCH/ --clientType S3Client
+      - run: node test.js s3 s3://jvalanen-diory-test3/$EPOCH/
