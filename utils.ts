@@ -1,7 +1,7 @@
 import { Room } from '@diograph/diograph'
 import { S3Client } from '@diograph/s3-client'
 import { generateDiory } from '@diograph/file-generator'
-import { readFile } from 'fs/promises'
+import { promises as fsPromises } from 'fs'
 import { constructAndLoadRoom } from '@diograph/utils'
 import { IDiory } from '@diograph/diograph/types'
 import { LocalClient } from '@diograph/local-client'
@@ -41,8 +41,8 @@ export const generateAndAddDioryFromFilePath = async (
   room.diograph.addDiory(diory)
 
   if (copyContent) {
-    const sourceFileContent = await readFile(filePath)
-    await room.addContent(sourceFileContent, diory.id)
+    const sourceFileContent = await fsPromises.readFile(filePath)
+    // await room.addContent(sourceFileContent, diory.id)
     // diory.changeContentUrl(dioryObject.id)
   }
 
